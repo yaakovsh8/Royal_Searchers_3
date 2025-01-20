@@ -61,10 +61,12 @@ def crawl_all():
             results[url] = index
 
             for link in soup.find_all('a', href=True):
-                full_url = urljoin(url, link['href'])
+                href = link['href']
+                if href and not href.startswith('#'):  # דילוג על קישורים ריקים או עוגנים (#)
+                    full_url = urljoin(url, href)
                 if full_url.startswith("https://www.myprotein.co.il") and full_url not in visited:
                     to_visit.append(full_url)
-
+                    
         except requests.RequestException as e:
             print(f"Error fetching {url}: {e}")
 
