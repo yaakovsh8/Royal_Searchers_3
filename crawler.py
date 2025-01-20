@@ -36,32 +36,42 @@ def remove_stop_words(index):
 
 # פונקציית זחילה
 def crawl_all():
-    specific_urls = [
+    start_urls = [
         "https://www.myprotein.co.il/nutrition/healthy-food-drinks/protein-snacks.list",
         "https://www.myprotein.co.il/clothing/mens/all-tops.list"
     ]
+    MAX_PAGES = 50  # הגבלת כמות העמודים
     visited = set()
+    to_visit = list(start_urls)
     results = {}
 
-    for url in specific_urls:
+    while to_visit and len(visited) < MAX_PAGES:
+        url = to_visit.pop(0)
+        if url in visited:
+            continue
+
         try:
-            response = requests.get(url, timeout=10)
+            response = requests.get(url, timeout=5)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, 'html.parser')
 
-            # הדפסה לבדיקה
-            print(f"\nFetching URL: {url}")
-            print(soup.prettify()[:1000])  # מדפיס את 1000 התווים הראשונים של תוכן הדף
-
-            # עיבוד תוכן
             index = index_words(soup)
             index = remove_stop_words(index)
             index = apply_stemming(index)
             results[url] = index
+
+            for link in soup.find_all('a', href=True):
+                full_url = urljoin(url, link['href'])
+                if full_url.startswith("https://www.myprotein.co.il") and full_url not in visited:
+                    to_visit.append(full_url)
+
         except requests.RequestException as e:
             print(f"Error fetching {url}: {e}")
 
+        visited.add(url)
+
     return results
+
 
 
 # חישוב TF-IDF
