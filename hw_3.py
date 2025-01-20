@@ -5,7 +5,7 @@ from collections import defaultdict, Counter
 from nltk.stem import PorterStemmer
 import math
 import numpy as np
-
+import re  # ייבוא המודול החסר
 
 # פונקציות עיבוד טקסט
 def index_words(soup):
@@ -16,7 +16,6 @@ def index_words(soup):
         index[word] = index.get(word, 0) + 1
     return index
 
-
 def apply_stemming(index):
     stemmer = PorterStemmer()
     stemmed_index = {}
@@ -24,7 +23,6 @@ def apply_stemming(index):
         stemmed_word = stemmer.stem(word)
         stemmed_index[stemmed_word] = stemmed_index.get(stemmed_word, 0) + count
     return stemmed_index
-
 
 def remove_stop_words(index):
     stop_words = {
@@ -37,7 +35,6 @@ def remove_stop_words(index):
        "where", "which", "who", "why", "will", "with", "you", "your"
     }
     return {word: count for word, count in index.items() if word not in stop_words}
-
 
 # פונקציית זחילה
 def crawl_all():
@@ -63,7 +60,6 @@ def crawl_all():
             print(f"Error fetching {url}: {e}")
 
     return results
-
 
 # חישוב TF-IDF
 def compute_tf_idf(query, results):
@@ -91,38 +87,7 @@ def compute_tf_idf(query, results):
 
     return tf_idf_scores
 
-
-# פונקציה לחישוב PageRank
-def calculate_page_rank(links_structure, damping_factor=0.85, max_iterations=100, epsilon=1e-6):
-    pages = list(links_structure.keys())
-    N = len(pages)
-    ranks = np.ones(N) / N
-    page_index = {page: i for i, page in enumerate(pages)}
-
-    adj_matrix = np.zeros((N, N))
-    for page, out_links in links_structure.items():
-        if out_links:
-            for out_link in out_links:
-                if out_link in page_index:
-                    adj_matrix[page_index[out_link], page_index[page]] = 1 / len(out_links)
-
-    # טיפול בקודקודים תלויים
-    dangling_nodes = np.where(adj_matrix.sum(axis=0) == 0)[0]
-    for node in dangling_nodes:
-        adj_matrix[:, node] = 1 / N
-
-    # חישוב PageRank
-    for iteration in range(max_iterations):
-        new_ranks = (1 - damping_factor) / N + damping_factor * adj_matrix @ ranks
-        if np.linalg.norm(new_ranks - ranks, 1) < epsilon:
-            ranks = new_ranks
-            break
-        ranks = new_ranks
-
-    return {pages[i]: ranks[i] for i in range(N)}
-
-
-# פונקציה להצגת נתונים סטטיסטיים
+# פונקציה להצגת תוצאות
 def display_results(query, results, tf_idf_scores):
     print(f"\nתוצאות עבור השאילתה: {query}")
     print("-" * 50)
