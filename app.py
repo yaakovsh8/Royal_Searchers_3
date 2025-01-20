@@ -1,14 +1,14 @@
 from flask import Flask, render_template, request, jsonify
-from crawler import crawl  # מנוע החיפוש שלך
+from crawler import crawl_all, compute_tf_idf
 
 app = Flask(__name__)
 
-# עמוד הבית עם מנוע החיפוש
+# דף הבית
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# עמוד שאלות ותשובות
+# דף שאלות ותשובות
 @app.route('/questions')
 def questions():
     return render_template('questions.html')
@@ -20,9 +20,20 @@ def search():
     if not query:
         return jsonify({"error": "No query provided"}), 400
 
-    start_url = "https://www.myprotein.co.il/"
-    results = crawl(query, start_url, max_page=5)
-    return jsonify(results)  # החזרת תוצאות JSON
+    # זחילה וחישוב TF-IDF
+    results = crawl_all()
+    tf_idf_scores = compute_tf_idf(query, results)
+
+    # דירוג תוצאות
+    ranked_results = sorted(tf_idf_scores.items(), key=lambda x: sum(x[1].values()), reverse=True)
+
+    # הכנה לפורמט JSON
+    formatted_results = [
+        {"url": url, "title": f"Total TF-IDF: {sum(scores.values()):.4f}"}
+        for url, scores in ranked_results
+    ]
+
+    return jsonify(formatted_results)
 
 if __name__ == '__main__':
     app.run(debug=True)

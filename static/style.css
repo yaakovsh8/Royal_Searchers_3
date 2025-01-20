@@ -1,10 +1,10 @@
 body {
     font-family: Arial, sans-serif;
     line-height: 1.6;
-    text-align: center;
     background-color: #f9f9f9;
     color: #333;
     direction: rtl;
+    text-align: center;
 }
 
 header {
@@ -16,20 +16,11 @@ header {
 main {
     margin: 20px;
     padding: 20px;
-    background: #fff;
-    border-radius: 5px;
+    background: white;
+    border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 footer {
     margin-top: 20px;
-}
-
-#questions-list li a {
-    color: #4CAF50;
-    text-decoration: none;
-}
-
-#questions-list li a:hover {
-    text-decoration: underline;
 }

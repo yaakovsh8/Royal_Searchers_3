@@ -2,9 +2,11 @@ document.getElementById('search-form').addEventListener('submit', async (event) 
     event.preventDefault();
     const query = document.getElementById('search-query').value;
 
+    // שליחת בקשה ל-API
     const response = await fetch(`/search?query=${query}`);
     const data = await response.json();
 
+    // הצגת תוצאות חיפוש
     const searchResultsDiv = document.getElementById('search-results');
     searchResultsDiv.innerHTML = '';
     if (data.length > 0) {
