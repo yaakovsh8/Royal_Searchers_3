@@ -49,6 +49,10 @@ def crawl_all():
             response.raise_for_status()
             soup = BeautifulSoup(response.text, 'html.parser')
 
+            # הדפסה לבדיקה
+            print(f"\nFetching URL: {url}")
+            print(soup.prettify()[:1000])  # מדפיס את 1000 התווים הראשונים של תוכן הדף
+
             # עיבוד תוכן
             index = index_words(soup)
             index = remove_stop_words(index)
@@ -58,6 +62,7 @@ def crawl_all():
             print(f"Error fetching {url}: {e}")
 
     return results
+
 
 # חישוב TF-IDF
 def compute_tf_idf(query, results):

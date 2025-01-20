@@ -27,13 +27,18 @@ def search():
     # דירוג תוצאות
     ranked_results = sorted(tf_idf_scores.items(), key=lambda x: sum(x[1].values()), reverse=True)
 
-    # הכנת הפלט בפורמט JSON
+    # פורמט JSON מעודכן
     formatted_results = [
-        {"url": url, "title": f"Total TF-IDF: {sum(scores.values()):.4f}"}
+        {
+            "url": url,
+            "title": f"Total TF-IDF: {sum(scores.values()):.4f}",
+            "top_words": ", ".join([f"{word} ({scores[word]:.4f})" for word in scores])
+        }
         for url, scores in ranked_results
     ]
 
     return jsonify(formatted_results)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

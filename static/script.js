@@ -12,7 +12,12 @@ document.getElementById('search-form').addEventListener('submit', async (event) 
     if (data.length > 0) {
         data.forEach(result => {
             const resultElement = document.createElement('div');
-            resultElement.innerHTML = `<a href="${result.url}" target="_blank">${result.title}</a>`;
+            resultElement.innerHTML = `
+                <p>
+                    <strong><a href="${result.url}" target="_blank">${result.title}</a></strong><br>
+                    מילים מובילות: ${result.top_words}
+                </p>
+            `;
             searchResultsDiv.appendChild(resultElement);
         });
     } else {
