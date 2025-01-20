@@ -3,17 +3,14 @@ from hw_3 import crawl_all, compute_tf_idf, calculate_page_rank
 
 app = Flask(__name__)
 
-# דף הבית עם מנוע החיפוש
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# דף שאלות ותשובות
 @app.route('/questions')
 def questions():
     return render_template('questions.html')
 
-# API לחיפוש
 @app.route('/search', methods=['GET'])
 def search():
     query = request.args.get('query')
@@ -26,7 +23,7 @@ def search():
 
     # דירוג PageRank
     links_structure = {
-        url: [] for url in results.keys()  # הנחה: אין קישורים פנימיים
+        url: [] for url in results.keys()  # יצירת מבנה קישורים
     }
     page_rank = calculate_page_rank(links_structure)
 
