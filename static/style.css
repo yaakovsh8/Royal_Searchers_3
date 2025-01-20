@@ -13,18 +13,14 @@ header {
     padding: 10px 0;
 }
 
-form {
+main {
     margin: 20px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-input, button {
-    padding: 10px;
-    font-size: 16px;
-}
-
-#results {
+footer {
     margin-top: 20px;
-    text-align: left;
-    direction: ltr;
 }
-

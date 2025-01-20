@@ -3,44 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מנוע חיפוש - תוצרים</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>מנוע חיפוש MyProtein</title>
 </head>
 <body>
     <header>
-        <h1>מנוע חיפוש - תוצרים</h1>
-        <nav>
-            <ul>
-                <li><a href="#search-section">חיפוש</a></li>
-                <li><a href="#intro">מידע כללי</a></li>
-            </ul>
-        </nav>
+        <h1>מנוע חיפוש באתר MyProtein</h1>
     </header>
     <main>
-        <section id="search-section">
-            <h2>חיפוש</h2>
-            <input type="text" id="search-input" placeholder="חפש שאלה או תשובה...">
-            <button id="search-button">חפש</button>
-            <div id="results"></div>
-        </section>
-
-        <section id="intro">
-            <h2>מידע כללי</h2>
-            <p>
-                <strong>מגישים:</strong>
-                <ul>
-                    <li>Leonid Vyushkov - 327312526</li>
-                    <li>Yotam Gilad - 315819599</li>
-                    <li>Tomer Ben Lolo - 318318987</li>
-                    <li>Yaakov Shitrit - 304959422</li>
-                </ul>
-            </p>
-        </section>
+        <form id="search-form">
+            <input type="text" id="search-query" placeholder="חפש מוצר..." required>
+            <button type="submit">חיפוש</button>
+        </form>
+        <div id="results">
+            <h2>תוצאות חיפוש:</h2>
+            <div id="search-results"></div>
+        </div>
+        <footer>
+            <a href="/questions" id="qa-link">שאלות ותשובות</a>
+        </footer>
     </main>
-    <footer>
-        <p>&copy; 2025 מנוע חיפוש תוצרים</p>
-    </footer>
-
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
