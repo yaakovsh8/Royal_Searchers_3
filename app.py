@@ -19,9 +19,10 @@ def search():
     query = request.args.get('query')
     if not query:
         return jsonify({"error": "No query provided"}), 400
+
     start_url = "https://www.myprotein.co.il/"
     results = crawl(query, start_url, max_page=5)
-    return jsonify({"results": results})
+    return jsonify(results)  # החזרת תוצאות JSON
 
 if __name__ == '__main__':
     app.run(debug=True)

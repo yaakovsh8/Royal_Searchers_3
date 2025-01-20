@@ -1,19 +1,19 @@
-const data = [
-    { question: "שאלה 1: הרחבות שאילתא ואחזור ממוין", answer: "תוצאה לשאלה 1 חלק 1" },
-    { question: "שאלה 2: Link Analysis", answer: "תוצאה לסעיף ב בשאלה 2" },
-    { question: "שאלה 3: קדם פרויקט – בדיקת הזחלן", answer: "תוצאה לסעיף א בשאלה 3" },
-    // הוסף כאן את שאר השאלות והתשובות
-];
+document.getElementById('search-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const query = document.getElementById('search-query').value;
 
-document.getElementById("search-button").addEventListener("click", () => {
-    const query = document.getElementById("search-input").value.toLowerCase();
-    const results = data.filter(item => item.question.toLowerCase().includes(query) || item.answer.toLowerCase().includes(query));
-    displayResults(results);
+    const response = await fetch(`/search?query=${query}`);
+    const data = await response.json();
+
+    const searchResultsDiv = document.getElementById('search-results');
+    searchResultsDiv.innerHTML = '';
+    if (data.length > 0) {
+        data.forEach(result => {
+            const resultElement = document.createElement('div');
+            resultElement.innerHTML = `<a href="${result.url}" target="_blank">${result.title}</a>`;
+            searchResultsDiv.appendChild(resultElement);
+        });
+    } else {
+        searchResultsDiv.textContent = 'לא נמצאו תוצאות חיפוש.';
+    }
 });
-
-function displayResults(results) {
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = results.length
-        ? results.map(item => `<div class="result"><h3>${item.question}</h3><p>${item.answer}</p></div>`).join("")
-        : "<p>לא נמצאו תוצאות</p>";
-}
