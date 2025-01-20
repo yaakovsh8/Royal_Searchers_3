@@ -9,6 +9,9 @@
 <body>
     <header>
         <h1>מנוע חיפוש באתר MyProtein</h1>
+        <nav>
+            <a href="/questions">שאלות ותשובות</a>
+        </nav>
     </header>
     <main>
         <form id="search-form">
@@ -19,9 +22,6 @@
             <h2>תוצאות חיפוש:</h2>
             <div id="search-results"></div>
         </div>
-        <footer>
-            <a href="/questions">שאלות ותשובות</a>
-        </footer>
     </main>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>

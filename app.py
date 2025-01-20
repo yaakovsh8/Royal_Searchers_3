@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, jsonify
-from crawler import crawl_all, compute_tf_idf
+from hw_3 import crawl_all, compute_tf_idf
 
 app = Flask(__name__)
 
-# דף הבית
+# דף הבית עם מנוע החיפוש
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -27,7 +27,7 @@ def search():
     # דירוג תוצאות
     ranked_results = sorted(tf_idf_scores.items(), key=lambda x: sum(x[1].values()), reverse=True)
 
-    # הכנה לפורמט JSON
+    # הכנת הפלט בפורמט JSON
     formatted_results = [
         {"url": url, "title": f"Total TF-IDF: {sum(scores.values()):.4f}"}
         for url, scores in ranked_results
