@@ -1,21 +1,19 @@
-document.getElementById('search-form').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const query = document.getElementById('search-query').value;
+const data = [
+    { question: "שאלה 1: הרחבות שאילתא ואחזור ממוין", answer: "תוצאה לשאלה 1 חלק 1" },
+    { question: "שאלה 2: Link Analysis", answer: "תוצאה לסעיף ב בשאלה 2" },
+    { question: "שאלה 3: קדם פרויקט – בדיקת הזחלן", answer: "תוצאה לסעיף א בשאלה 3" },
+    // הוסף כאן את שאר השאלות והתשובות
+];
 
-    const response = await fetch(`/search?query=${query}`);
-    const results = await response.json();
-
-    const resultsDiv = document.getElementById('results');
-    resultsDiv.innerHTML = '';
-
-    if (results.error) {
-        resultsDiv.textContent = results.error;
-        return;
-    }
-
-    results.forEach(page => {
-        const pageElement = document.createElement('div');
-        pageElement.innerHTML = `<h3><a href="${page.url}" target="_blank">${page.url}</a></h3><p>${JSON.stringify(page.results)}</p>`;
-        resultsDiv.appendChild(pageElement);
-    });
+document.getElementById("search-button").addEventListener("click", () => {
+    const query = document.getElementById("search-input").value.toLowerCase();
+    const results = data.filter(item => item.question.toLowerCase().includes(query) || item.answer.toLowerCase().includes(query));
+    displayResults(results);
 });
+
+function displayResults(results) {
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = results.length
+        ? results.map(item => `<div class="result"><h3>${item.question}</h3><p>${item.answer}</p></div>`).join("")
+        : "<p>לא נמצאו תוצאות</p>";
+}
