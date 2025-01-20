@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from hw_3 import crawl_all, compute_tf_idf
+from hw_3 import crawl_all, compute_tf_idf, calculate_page_rank
 
 app = Flask(__name__)
 
@@ -24,21 +24,25 @@ def search():
     results = crawl_all()
     tf_idf_scores = compute_tf_idf(query, results)
 
-    # דירוג תוצאות
-    ranked_results = sorted(tf_idf_scores.items(), key=lambda x: sum(x[1].values()), reverse=True)
+    # דירוג PageRank
+    links_structure = {
+        url: [] for url in results.keys()  # הנחה: אין קישורים פנימיים
+    }
+    page_rank = calculate_page_rank(links_structure)
 
-    # פורמט JSON מעודכן
+    # עיבוד התוצאות
+    ranked_results = sorted(tf_idf_scores.items(), key=lambda x: sum(x[1].values()), reverse=True)
     formatted_results = [
         {
             "url": url,
-            "title": f"Total TF-IDF: {sum(scores.values()):.4f}",
-            "top_words": ", ".join([f"{word} ({scores[word]:.4f})" for word in scores])
+            "tf_idf_score": sum(scores.values()),
+            "page_rank": page_rank.get(url, 0),
+            "words": {word: f"{score:.4f}" for word, score in scores.items()}
         }
         for url, scores in ranked_results
     ]
 
     return jsonify(formatted_results)
-
 
 if __name__ == '__main__':
     app.run(debug=True)

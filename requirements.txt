@@ -1,8 +1,6 @@
-Flask==3.1.0
-beautifulsoup4==4.12.3
-requests==2.32.3
-pandas==2.2.3
-numpy==1.25.2
-matplotlib==3.9.2
-nltk==3.9.1
-gunicorn==23.0.0
+flask
+requests
+beautifulsoup4
+nltk
+numpy
+gunicorn

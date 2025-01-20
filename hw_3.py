@@ -5,7 +5,7 @@ from collections import defaultdict, Counter
 from nltk.stem import PorterStemmer
 import math
 import numpy as np
-import re  # ייבוא המודול החסר
+import re
 
 # פונקציות עיבוד טקסט
 def index_words(soup):
@@ -87,29 +87,42 @@ def compute_tf_idf(query, results):
 
     return tf_idf_scores
 
-# פונקציה להצגת תוצאות
-def display_results(query, results, tf_idf_scores):
-    print(f"\nתוצאות עבור השאילתה: {query}")
-    print("-" * 50)
+# חישוב PageRank
+def calculate_page_rank(links_structure, damping_factor=0.85, max_iterations=100, epsilon=1e-6):
+    pages = list(links_structure.keys())
+    N = len(pages)
+    ranks = np.ones(N) / N
+    page_index = {page: i for i, page in enumerate(pages)}
 
-    for url, word_counts in results.items():
-        print(f"כתובת: {url}")
-        print("מילים נפוצות:")
-        for word, count in Counter(word_counts).most_common(10):
-            print(f"  {word}: {count}")
-        print()
+    adj_matrix = np.zeros((N, N))
+    for page, out_links in links_structure.items():
+        if out_links:
+            for out_link in out_links:
+                if out_link in page_index:
+                    adj_matrix[page_index[out_link], page_index[page]] = 1 / len(out_links)
 
-    print("\nTF-IDF Results:")
-    for url, scores in tf_idf_scores.items():
-        print(f"כתובת: {url}")
-        for word, score in scores.items():
-            print(f"  {word}: {score:.4f}")
-        print()
+    # טיפול בקודקודים תלויים
+    dangling_nodes = np.where(adj_matrix.sum(axis=0) == 0)[0]
+    for node in dangling_nodes:
+        adj_matrix[:, node] = 1 / N
 
+    # חישוב PageRank
+    for iteration in range(max_iterations):
+        new_ranks = (1 - damping_factor) / N + damping_factor * adj_matrix @ ranks
+        if np.linalg.norm(new_ranks - ranks, 1) < epsilon:
+            ranks = new_ranks
+            break
+        ranks = new_ranks
+
+    return {pages[i]: ranks[i] for i in range(N)}
 
 # הרצה מקומית
 if __name__ == "__main__":
     results = crawl_all()
     search_query = "L T-Shirt"
     tf_idf_scores = compute_tf_idf(search_query, results)
-    display_results(search_query, results, tf_idf_scores)
+    page_rank = calculate_page_rank({url: [] for url in results.keys()})
+    print("\nFinal TF-IDF Results:")
+    print(tf_idf_scores)
+    print("\nFinal PageRank Results:")
+    print(page_rank)

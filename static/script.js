@@ -14,8 +14,10 @@ document.getElementById('search-form').addEventListener('submit', async (event) 
             const resultElement = document.createElement('div');
             resultElement.innerHTML = `
                 <p>
-                    <strong><a href="${result.url}" target="_blank">${result.title}</a></strong><br>
-                    מילים מובילות: ${result.top_words}
+                    <strong><a href="${result.url}" target="_blank">${result.url}</a></strong><br>
+                    TF-IDF Score: ${result.tf_idf_score.toFixed(4)}<br>
+                    PageRank: ${result.page_rank.toFixed(4)}<br>
+                    מילים: ${Object.entries(result.words).map(([word, score]) => `${word} (${score})`).join(', ')}
                 </p>
             `;
             searchResultsDiv.appendChild(resultElement);
